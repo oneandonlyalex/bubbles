@@ -160,7 +160,24 @@ var agecatCenters = { // Center locations of the bubbles.
     'mehr als 5h': 900
   };
     
+//  Fünfter Button: Sorgenbarometer
+    
+  var concernCenters = { // Center locations of the bubbles. 
+    '1': { x: 320, y: height / 2 },
+    '2': { x: 420, y: height / 2 },
+    '3': { x: 530, y: height / 2 },
+    '4': { x: 770, y: height / 2 } 
+  };
 
+  var concernTitleX = {  // X locations of the year titles.
+    'Stimmt ganz': 140,
+    'Stimmt eher': 360,
+    'Stimmt eher nicht': 630,
+    'Stimmt nicht': 900
+  };
+    
+
+       
        
     
 //* ------------------------------------------------------------------
@@ -227,6 +244,10 @@ var agecatCenters = { // Center locations of the bubbles.
         agecat: d.kategoriealter,
           
         sex: d.geschlecht,
+          
+        concern: d.sorgenkat,
+        concerntext: d.sorgen, 
+        
           
        
         
@@ -325,6 +346,7 @@ var agecatCenters = { // Center locations of the bubbles.
     hideAgecat();
     hideSex();
     hideScreentime();
+    hideConcern();
 
     
     force.on('tick', function (e) {
@@ -367,6 +389,7 @@ Die Positionierung basiert auf dem alpha Parameter des force layouts und wird kl
     hideAgecat();
     hideSex();
     hideScreentime();
+    hideConcern();
 
 
     force.on('tick', function (e) {
@@ -415,6 +438,7 @@ function moveToYear(alpha) {
     hideYear();
     hideSex();
     hideScreentime();
+    hideConcern();
 
 
     force.on('tick', function (e) {
@@ -463,6 +487,7 @@ function moveToAgecat(alpha) {
     hideYear();
     hideAgecat();
     hideScreentime();
+    hideConcern();
 
 
     force.on('tick', function (e) {
@@ -511,6 +536,7 @@ function moveToAgecat(alpha) {
     hideYear();
     hideSex();
     hideAgecat();
+    hideConcern();
 
 
     force.on('tick', function (e) {
@@ -549,7 +575,56 @@ function moveToAgecat(alpha) {
     }    
 
   
+    //* ------------------------------------------------------------------
+//
+// CONCERN / SORGEN
+//
+// -----------------------------------------------------------------*/
     
+  function splitBubblesintoConcern() {
+    showConcern();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+
+
+    force.on('tick', function (e) {
+      bubbles.each(moveToConcern(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+  function moveToConcern(alpha) {
+    return function (d) {
+      var target = concernCenters[d.concern];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideConcern() {
+    svg.selectAll('.concern').remove();
+  }
+
+  function showConcern() {
+
+    var concernData = d3.keys(concernTitleX);
+    var concern = svg.selectAll('.concern')
+      .data(concernData);
+
+    concern.enter().append('text')
+      .attr('class', 'concern')
+      .attr('x', function (d) { return concernTitleX[d]; })
+      .attr('y', 65)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    }  
+    
+
     
 //* ------------------------------------------------------------------
 //
@@ -576,7 +651,9 @@ function moveToAgecat(alpha) {
       splitBubblesintoSex();
     } else if (displayName === 'screentime') {
       splitBubblesintoScreentime();
-    } else {
+    } else if (displayName === 'concern') {
+      splitBubblesintoConcern();
+
       groupBubbles();
     }
   };
@@ -615,15 +692,23 @@ function moveToAgecat(alpha) {
 
     var content = '<span class="name">Alter: </span><span class="value">' +
                   d.age +
+        
                   '</span><br/>' +
                   '<span class="name">Geschlecht: </span><span class="value">' +
                   d.sex +
+        
                   '</span><br/>' +
                   '<span class="name">Bildschirmzeit: </span><span class="value">' +
                   d.screentime +
+        
                   '</span><br/>' +
-                  '<span class="name">"Umfragejahr": </span><span class="value">' +
+                  '<span class="name">Umfragejahr: </span><span class="value">' +
                   d.year +
+        
+                  '</span><br/>' +
+                  '<span class="name">"Ich mache mich Sorgen um meine Daten": </span><span class="value">' +
+                  d.concerntext +
+                  
                   '</span>';
     tooltip2.showtooltip2(content, d3.event);
   }
