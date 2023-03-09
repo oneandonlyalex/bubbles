@@ -179,32 +179,34 @@ var agecatCenters = { // Center locations of the bubbles.
 //  Sechster Button: Nutzungszeit
     
   var discordCenters = { // Center locations of the bubbles. 
-    '1': { x: 320, y: height / 2 },
-    '2': { x: 420, y: height / 2 },
-    '3': { x: 530, y: height / 2 },
+    '0': { x: 320, y: height / 2 },
+    '1': { x: 420, y: height / 2 },
+    '2': { x: 520, y: height / 2 },
+    '3': { x: 630, y: height / 2 },
     '4': { x: 770, y: height / 2 } 
   };
 
 var discordTitleX = {  // X locations of the year titles.
-  'Maennlich 1h-3h': 140,
-    'Maennlich 3h-5h+': 360,
-    'Weiblich 1h-3h': 630,
-    'Weiblich 3h-5h+': 900
+    'Ich weiss nicht': 200,
+    'Ja': 400,
+    'eher ja': 560,
+    'eher nein': 730,
+    'nein': 900
   };
 
  //  Siebter Button: Geldinwoche
     
   var moneyCenters = { // Center locations of the bubbles. 
     '0': { x: 320, y: height / 2 },
-    '1': { x: 420, y: height / 2 },
-    '2': { x: 530, y: height / 2 },
+    '1': { x: 440, y: height / 2 },
+    '2': { x: 600, y: height / 2 },
     '3': { x: 770, y: height / 2 } 
   };
 
   var moneyTitleX = {  // X locations of the year titles.
-    'Gratis': 140,
-    '5CHF bis 50CHF': 360,
-    '50CHF bis 100CHF': 530,
+    'Gratis': 200,
+    '5CHF bis 50CHF': 400,
+    '50CHF bis 100CHF': 600,
     'Mehr als 100CHF': 900
   };
 //  Sechster Button: Nutzungszeit
@@ -293,6 +295,7 @@ var discordTitleX = {  // X locations of the year titles.
         concerntext: d.sorgen, 
           
         discord: d.discord,
+          discordtext: d.discordtext,
         
        // usetime: d.nutzungszeit,
     
@@ -718,7 +721,7 @@ function moveToAgecat(alpha) {
   function showDiscord() {
 
     var discordData = d3.keys(discordTitleX);
-    var money = svg.selectAll('.discord')
+    var discord = svg.selectAll('.discord')
       .data(discordData);
 
     discord.enter().append('text')
@@ -842,7 +845,7 @@ function moveToAgecat(alpha) {
 
   var fillColor = d3.scale.ordinal()
     .domain(['1','2','3', '4','5','6'])
-    .range(['#F7CAD0', '#ff006e', '#48CAE4', '#0096C7','#023E8A','#03045E']);
+    .range(['#31AFD4', '#3C5468', '#070A0D', '#EB9C0A','#1D6D0D','#653E65']);
 
   /* Tooltip-Funktion*/
   function showDetail(d) {
@@ -873,7 +876,7 @@ function moveToAgecat(alpha) {
                   d.moneytext +
              
                 '</span><br/>' +
-                  '<span class="name">"Für wie viele Leute benutzen Discord": </span><span class="value">' +
+                  '<span class="name">"Für wie viele Leute benutzen Discordf": </span><span class="value">' +
                   d.discordtext +
                   
                   '</span>';
