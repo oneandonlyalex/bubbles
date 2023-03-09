@@ -176,8 +176,52 @@ var agecatCenters = { // Center locations of the bubbles.
     'Stimmt nicht': 900
   };
     
+//  Sechster Button: Nutzungszeit
+    
+  var discordCenters = { // Center locations of the bubbles. 
+    '1': { x: 320, y: height / 2 },
+    '2': { x: 420, y: height / 2 },
+    '3': { x: 530, y: height / 2 },
+    '4': { x: 770, y: height / 2 } 
+  };
 
-       
+var discordTitleX = {  // X locations of the year titles.
+  'Maennlich 1h-3h': 140,
+    'Maennlich 3h-5h+': 360,
+    'Weiblich 1h-3h': 630,
+    'Weiblich 3h-5h+': 900
+  };
+
+ //  Siebter Button: Geldinwoche
+    
+  var moneyCenters = { // Center locations of the bubbles. 
+    '0': { x: 320, y: height / 2 },
+    '1': { x: 420, y: height / 2 },
+    '2': { x: 530, y: height / 2 },
+    '3': { x: 770, y: height / 2 } 
+  };
+
+  var moneyTitleX = {  // X locations of the year titles.
+    'Gratis': 140,
+    '5CHF bis 50CHF': 360,
+    '50CHF bis 100CHF': 530,
+    'Mehr als 100CHF': 900
+  };
+//  Sechster Button: Nutzungszeit
+    
+//  var usetimeCenters = { // Center locations of the bubbles. 
+//    '1': { x: 320, y: height / 2 },
+//    '2': { x: 420, y: height / 2 },
+//    '3': { x: 530, y: height / 2 },
+//    '4': { x: 770, y: height / 2 } 
+//  };
+//
+//var usetimeTitleX = {  // X locations of the year titles.
+//  'Maennlich 1h-3h': 140,
+//    'Maennlich 3h-5h+': 360,
+//    'Weiblich 1h-3h': 630,
+//    'Weiblich 3h-5h+': 900
+//  };
        
     
 //* ------------------------------------------------------------------
@@ -247,10 +291,15 @@ var agecatCenters = { // Center locations of the bubbles.
           
         concern: d.sorgenkat,
         concerntext: d.sorgen, 
-        
           
-       
+        discord: d.discord,
         
+       // usetime: d.nutzungszeit,
+    
+          
+        money: d.geldeinewochekat,
+        moneytext: d.geldeinewoche,
+       
         x: Math.random() * 900,
         y: Math.random() * 800
       };
@@ -347,7 +396,8 @@ var agecatCenters = { // Center locations of the bubbles.
     hideSex();
     hideScreentime();
     hideConcern();
-
+    hideMoney();
+    hideDiscord();
     
     force.on('tick', function (e) {
       bubbles.each(moveToCenter(e.alpha))
@@ -390,8 +440,9 @@ Die Positionierung basiert auf dem alpha Parameter des force layouts und wird kl
     hideSex();
     hideScreentime();
     hideConcern();
-
-
+    hideMoney();
+    hideDiscord();
+     
     force.on('tick', function (e) {
       bubbles.each(moveToYear(e.alpha))
         .attr('cx', function (d) { return d.x; })
@@ -439,8 +490,9 @@ function moveToYear(alpha) {
     hideSex();
     hideScreentime();
     hideConcern();
-
-
+    hideMoney();
+    hideDiscord();
+     
     force.on('tick', function (e) {
       bubbles.each(moveToAgecat(e.alpha))
         .attr('cx', function (d) { return d.x; })
@@ -488,8 +540,9 @@ function moveToAgecat(alpha) {
     hideAgecat();
     hideScreentime();
     hideConcern();
-
-
+    hideMoney();
+    hideDiscord();
+      
     force.on('tick', function (e) {
       bubbles.each(moveToSex(e.alpha))
         .attr('cx', function (d) { return d.x; })
@@ -537,8 +590,9 @@ function moveToAgecat(alpha) {
     hideSex();
     hideAgecat();
     hideConcern();
-
-
+    hideMoney();
+    hideDiscord();
+      
     force.on('tick', function (e) {
       bubbles.each(moveToScreentime(e.alpha))
         .attr('cx', function (d) { return d.x; })
@@ -575,7 +629,7 @@ function moveToAgecat(alpha) {
     }    
 
   
-    //* ------------------------------------------------------------------
+//* ------------------------------------------------------------------
 //
 // CONCERN / SORGEN
 //
@@ -587,8 +641,9 @@ function moveToAgecat(alpha) {
     hideSex();
     hideAgecat();
     hideScreentime();
-
-
+    hideMoney();
+    hideDiscord();
+      
     force.on('tick', function (e) {
       bubbles.each(moveToConcern(e.alpha))
         .attr('cx', function (d) { return d.x; })
@@ -624,6 +679,106 @@ function moveToAgecat(alpha) {
       .text(function (d) { return d; });
     }  
     
+//* ------------------------------------------------------------------
+//
+// DISCORD / DISCORD
+//
+// -----------------------------------------------------------------*/
+    
+  function splitBubblesintoDiscord() {
+    showDiscord();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+    hideConcern();
+    hideMoney();
+      
+    force.on('tick', function (e) {
+      bubbles.each(moveToDiscord(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+   function moveToDiscord(alpha) {
+    return function (d) {
+      var target = discordCenters[d.discord];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideDiscord() {
+    svg.selectAll('.discord').remove();
+  }
+
+  function showDiscord() {
+
+    var discordData = d3.keys(discordTitleX);
+    var money = svg.selectAll('.discord')
+      .data(discordData);
+
+    discord.enter().append('text')
+      .attr('class', 'discord')
+      .attr('x', function (d) { return discordTitleX[d]; })
+      .attr('y', 65)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    } 
+
+    
+//* ------------------------------------------------------------------
+//
+// MONEY / GELD
+//
+// -----------------------------------------------------------------*/
+    
+  function splitBubblesintoMoney() {
+    showMoney();
+    hideYear();
+    hideSex();
+    hideAgecat();
+    hideScreentime();
+    hideConcern();
+    hideDiscord();
+      
+    force.on('tick', function (e) {
+      bubbles.each(moveToMoney(e.alpha))
+        .attr('cx', function (d) { return d.x; })
+        .attr('cy', function (d) { return d.y; });
+    });
+
+    force.start();
+  }
+
+   function moveToMoney(alpha) {
+    return function (d) {
+      var target = moneyCenters[d.money];
+      d.x = d.x + (target.x - d.x) * damper * alpha * 1.1;
+      d.y = d.y + (target.y - d.y) * damper * alpha * 1.1;
+    };
+  }
+
+  function hideMoney() {
+    svg.selectAll('.money').remove();
+  }
+
+  function showMoney() {
+
+    var moneyData = d3.keys(moneyTitleX);
+    var money = svg.selectAll('.money')
+      .data(moneyData);
+
+    money.enter().append('text')
+      .attr('class', 'money')
+      .attr('x', function (d) { return moneyTitleX[d]; })
+      .attr('y', 65)
+      .attr('text-anchor', 'middle')
+      .text(function (d) { return d; });
+    } 
 
     
 //* ------------------------------------------------------------------
@@ -653,8 +808,12 @@ function moveToAgecat(alpha) {
       splitBubblesintoScreentime();
     } else if (displayName === 'concern') {
       splitBubblesintoConcern();
-
-      groupBubbles();
+    } else if (displayName === 'money') {
+      splitBubblesintoMoney();
+    } else if (displayName === 'discord') {
+      splitBubblesintoDiscord();
+    } else {
+       groupBubbles();
     }
   };
     
@@ -708,6 +867,14 @@ function moveToAgecat(alpha) {
                   '</span><br/>' +
                   '<span class="name">"Ich mache mich Sorgen um meine Daten": </span><span class="value">' +
                   d.concerntext +
+        
+                  '</span><br/>' +
+                  '<span class="name">"Für wie viel Geld würden sie ihre Geräte eine Woche nicht benutzen": </span><span class="value">' +
+                  d.moneytext +
+             
+                '</span><br/>' +
+                  '<span class="name">"Für wie viele Leute benutzen Discord": </span><span class="value">' +
+                  d.discordtext +
                   
                   '</span>';
     tooltip2.showtooltip2(content, d3.event);
