@@ -876,7 +876,7 @@ function moveToAgecat(alpha) {
                   d.moneytext +
              
                 '</span><br/>' +
-                  '<span class="name">"Für wie viele Leute benutzen Discordf": </span><span class="value">' +
+                  '<span class="name">"Benutzen sie Discord?": </span><span class="value">' +
                   d.discordtext +
                   
                   '</span>';
