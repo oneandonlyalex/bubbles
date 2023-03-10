@@ -213,9 +213,9 @@ var discordTitleX = {  // X locations of the year titles.
     
 //  var usetimeCenters = { // Center locations of the bubbles. 
 //    '1': { x: 320, y: height / 2 },
-//    '2': { x: 420, y: height / 2 },
+//    '2': { x: 400, y: height / 2 },
 //    '3': { x: 530, y: height / 2 },
-//    '4': { x: 770, y: height / 2 } 
+//    '4': { x: 740, y: height / 2 } 
 //  };
 //
 //var usetimeTitleX = {  // X locations of the year titles.
